@@ -115,13 +115,13 @@ def _impl(ctx):
         template = ctx.file._tag_tpl,
         substitutions = {
             "%{args}": " ".join(pusher_args),
-            "%{container_pusher}": _get_runfile_path(ctx, ctx.executable._pusher),
+            "%{container_pusher}": _get_runfile_path(ctx, ctx.executable.pusher),
         },
         output = ctx.outputs.executable,
         is_executable = True,
     )
-    runfiles = ctx.runfiles(files = [ctx.executable._pusher] + image_files + stamp_inputs)
-    runfiles = runfiles.merge(ctx.attr._pusher.default_runfiles)
+    runfiles = ctx.runfiles(files = [ctx.executable.pusher] + image_files + stamp_inputs)
+    runfiles = runfiles.merge(ctx.attr.pusher.default_runfiles)
 
     return [
         DefaultInfo(executable = ctx.outputs.executable, runfiles = runfiles),
@@ -155,7 +155,7 @@ container_push = rule(
             default = Label("//container:push-tag.sh.tpl"),
             allow_single_file = True,
         ),
-        "_pusher": attr.label(
+        "pusher": attr.label(
             default = Label("@containerregistry//:pusher"),
             cfg = "host",
             executable = True,

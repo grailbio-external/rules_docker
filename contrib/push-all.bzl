@@ -73,7 +73,7 @@ def _impl(ctx):
                     digest_arg,
                     layer_arg,
                 ),
-                "%{container_pusher}": _get_runfile_path(ctx, ctx.executable._pusher),
+                "%{container_pusher}": _get_runfile_path(ctx, ctx.executable.pusher),
             },
             output = out,
             is_executable = True,
@@ -95,8 +95,8 @@ def _impl(ctx):
     )
 
     return struct(runfiles = ctx.runfiles(files = [
-        ctx.executable._pusher,
-    ] + stamp_inputs + runfiles + ctx.attr._pusher.default_runfiles.files.to_list()))
+        ctx.executable.pusher,
+    ] + stamp_inputs + runfiles + ctx.attr.pusher.default_runfiles.files.to_list()))
 
 container_push = rule(
     attrs = {
@@ -116,7 +116,7 @@ container_push = rule(
             default = Label("//container:push-tag.sh.tpl"),
             allow_single_file = True,
         ),
-        "_pusher": attr.label(
+        "pusher": attr.label(
             default = Label("@containerregistry//:pusher"),
             cfg = "host",
             executable = True,
