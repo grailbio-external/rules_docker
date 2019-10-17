@@ -43,6 +43,7 @@ container_import(
         repository_ctx.path("image"),
         "-tarball",
         repository_ctx.path(repository_ctx.attr.file),
+        "-gzip=%s" % "true" if repository_ctx.attr.gzip else "false",
     ])
 
     if result.return_code:
@@ -53,6 +54,10 @@ container_load = repository_rule(
         "file": attr.label(
             allow_single_file = True,
             mandatory = True,
+        ),
+        "gzip": attr.bool(
+            default = False,
+            doc = "Whether file is a gzip compressed tarball",
         ),
         "_loader_darwin": attr.label(
             executable = True,
